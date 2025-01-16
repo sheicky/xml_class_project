@@ -1,51 +1,16 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  password      String
-  name          String?
-  cinemaName    String?
-  cinemaAddress String?
-  movies        Movie[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-}
-
 model Movie {
-  id          String       @id @default(cuid())
+  id          String      @id @default(cuid())
   title       String
-  duration    Int // en minutes
+  duration    Int
   language    String
   subtitles   String?
   director    String
   actors      String[]
-  minAge      Int
-  poster      String?
+  minAge      Int?
+  poster      Bytes?      @db.ByteA
   userId      String
-  user        User         @relation(fields: [userId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
   screenings  Screening[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-}
-
-model Screening {
-  id        String   @id @default(cuid())
-  movieId   String
-  movie     Movie    @relation(fields: [movieId], references: [id])
-  startDate DateTime
-  endDate   DateTime
-  weekDays  String[] // ["MONDAY", "WEDNESDAY", "FRIDAY"]
-  startTime String   // "20:00"
-  city      String
-  address   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 } 
